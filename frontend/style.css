@@ -1,0 +1,359 @@
+/* HauntScan — haunted dashboard theme (task 7, design §7.6).
+   Dark background, eerie green + pumpkin orange + ghost-purple.
+   Theme must enhance function: severity stays readable at a glance. */
+
+:root {
+  --clr-bg: #0d0d0f;
+  --clr-surface: #17171c;
+  --clr-surface-2: #1f1f27;
+  --clr-border: #2c2c38;
+  --clr-green: #7ee081;
+  --clr-orange: #ff8c42;
+  --clr-purple: #b388ff;
+  --clr-text: #e8e6e3;
+  --clr-muted: #9a97a3;
+  --clr-critical: #ff5d47;
+  --clr-high: #ff8c42;
+  --clr-medium: #ffd23f;
+  --clr-low: #7ee081;
+  --clr-info: #b388ff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--clr-text);
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(179, 136, 255, 0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 110%, rgba(126, 224, 129, 0.08), transparent),
+    var(--clr-bg);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+.site-header {
+  padding: 1.5rem 1rem 0.5rem;
+  text-align: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: 0.05em;
+  color: var(--clr-orange);
+}
+
+.ghost { font-size: 2rem; }
+
+.tagline {
+  margin: 0.25rem 0 1rem;
+  color: var(--clr-muted);
+  font-style: italic;
+}
+
+.main-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.nav-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--clr-border);
+  border-radius: 999px;
+  background: var(--clr-surface);
+  color: var(--clr-text);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.nav-btn.active {
+  border-color: var(--clr-green);
+  color: var(--clr-green);
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.panel {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.hidden { display: none !important; }
+
+h2 { margin-top: 0; color: var(--clr-green); }
+
+.hint { color: var(--clr-muted); font-size: 0.9rem; }
+
+/* Form */
+label { display: block; margin: 0.75rem 0 0.25rem; font-weight: 600; }
+
+input[type="text"], select {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid var(--clr-border);
+  border-radius: 8px;
+  background: var(--clr-surface-2);
+  color: var(--clr-text);
+  font-size: 1rem;
+}
+
+input[type="text"]:focus, select:focus {
+  outline: 2px solid var(--clr-green);
+  outline-offset: 1px;
+}
+
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.check-row input { margin-top: 0.25rem; accent-color: var(--clr-green); }
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.btn-primary, .btn-ghost {
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.btn-primary {
+  border: 1px solid var(--clr-orange);
+  background: var(--clr-orange);
+  color: #1a0e00;
+  font-weight: 700;
+}
+
+.btn-ghost {
+  border: 1px solid var(--clr-purple);
+  background: transparent;
+  color: var(--clr-purple);
+}
+
+.form-error {
+  color: var(--clr-critical);
+  background: rgba(255, 93, 71, 0.12);
+  border: 1px solid var(--clr-critical);
+  border-radius: 8px;
+  padding: 0.6rem;
+}
+
+/* Toast */
+.toast {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--clr-critical);
+  border-radius: 8px;
+  background: rgba(255, 93, 71, 0.14);
+  color: var(--clr-text);
+}
+
+.toast button {
+  border: none;
+  background: transparent;
+  color: var(--clr-text);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+/* Live scan */
+.status-line { color: var(--clr-muted); }
+
+.pulse { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+.progress {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+  margin: 1rem 0;
+}
+
+.seg {
+  padding: 0.5rem 0.25rem;
+  border: 1px solid var(--clr-border);
+  border-radius: 8px;
+  background: var(--clr-surface-2);
+  color: var(--clr-muted);
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.seg.active {
+  border-color: var(--clr-orange);
+  color: var(--clr-orange);
+  font-weight: 700;
+}
+
+.seg.done {
+  border-color: var(--clr-green);
+  color: var(--clr-green);
+}
+
+.seg.done .seg-label::before { content: "✓ "; }
+
+.log {
+  max-height: 320px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--clr-border);
+  border-radius: 8px;
+  background: #0a0a0c;
+  color: var(--clr-green);
+  font-family: "Share Tech Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Findings */
+.filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.75rem 0; }
+
+.filter-btn {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--clr-border);
+  border-radius: 999px;
+  background: var(--clr-surface-2);
+  color: var(--clr-text);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.filter-btn.active { border-color: var(--clr-orange); color: var(--clr-orange); font-weight: 700; }
+
+.findings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.findings-table th, .findings-table td {
+  padding: 0.55rem 0.5rem;
+  border-bottom: 1px solid var(--clr-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.findings-table th { color: var(--clr-muted); font-size: 0.85rem; text-transform: uppercase; }
+
+.findings-table tbody tr { cursor: pointer; }
+.findings-table tbody tr:hover { background: var(--clr-surface-2); }
+
+.findings-table td.url { word-break: break-all; font-size: 0.85rem; }
+
+.chip {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.chip-critical { background: var(--clr-critical); color: #1a0500; }
+.chip-high { background: var(--clr-high); color: #1a0e00; }
+.chip-medium { background: var(--clr-medium); color: #1a1500; }
+.chip-low { background: var(--clr-low); color: #06210a; }
+.chip-info { background: var(--clr-info); color: #160a2e; }
+.chip-unknown { background: var(--clr-muted); color: #111; }
+
+.empty { color: var(--clr-muted); font-style: italic; }
+
+/* History */
+.history-list { list-style: none; margin: 0; padding: 0; }
+
+.history-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--clr-border);
+  cursor: pointer;
+}
+
+.history-row:hover { background: var(--clr-surface-2); }
+
+.history-target { font-weight: 700; word-break: break-all; }
+
+.profile-badge {
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--clr-purple);
+  border-radius: 999px;
+  color: var(--clr-purple);
+  font-size: 0.8rem;
+}
+
+.status { font-size: 0.9rem; }
+.status-running { color: var(--clr-green); }
+.status-completed { color: var(--clr-green); }
+.status-failed { color: var(--clr-critical); }
+
+.history-meta { color: var(--clr-muted); font-size: 0.85rem; }
+
+.count-chips { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+
+/* Detail dialog */
+.detail-dialog {
+  max-width: 640px;
+  width: calc(100% - 2rem);
+  border: 1px solid var(--clr-border);
+  border-radius: 12px;
+  background: var(--clr-surface);
+  color: var(--clr-text);
+  padding: 1.25rem;
+}
+
+.detail-dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
+
+.detail-dialog h3 { margin-top: 0; color: var(--clr-orange); word-break: break-word; }
+
+.detail-dialog dl { margin: 0 0 1rem; }
+.detail-dialog dt { margin-top: 0.6rem; color: var(--clr-muted); font-size: 0.85rem; }
+.detail-dialog dd { margin: 0; word-break: break-word; overflow-wrap: anywhere; }
+.detail-dialog dd.mono {
+  font-family: "Share Tech Mono", ui-monospace, Consolas, monospace;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
+.site-footer {
+  padding: 1rem;
+  text-align: center;
+  color: var(--clr-muted);
+  font-size: 0.85rem;
+}

@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# SQLite
+*.db
+*.db-wal
+*.db-shm
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Test cache
+.pytest_cache/

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HauntScan — Scan the darkness</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+<header class="site-header">
+  <div class="brand">
+    <span class="ghost" aria-hidden="true">👻</span>
+    <h1>HauntScan</h1>
+  </div>
+  <p class="tagline">Scan the darkness — something is hiding here.</p>
+  <nav class="main-nav">
+    <button id="nav-new-scan" class="nav-btn active" type="button">🎃 New Scan</button>
+    <button id="nav-history" class="nav-btn" type="button">📜 History</button>
+  </nav>
+</header>
+
+<main>
+  <div id="toast" class="toast hidden" role="alert">
+    <span id="toast-message"></span>
+    <button id="toast-close" type="button" aria-label="Dismiss">✕</button>
+  </div>
+
+  <!-- New scan -->
+  <section id="section-new-scan" class="panel">
+    <h2>Start a ghost hunt</h2>
+    <p class="hint">Enter a target you are <strong>authorized</strong> to scan.
+      HauntScan only runs recon — it never exploits anything.</p>
+    <form id="scan-form">
+      <label for="target">Target domain</label>
+      <input id="target" name="target" type="text" placeholder="example.com"
+             autocomplete="off" spellcheck="false" required>
+      <label for="profile">Profile</label>
+      <select id="profile" name="profile">
+        <option value="quick" selected>Quick — default templates</option>
+        <option value="full">Full — extended fuzzing templates</option>
+      </select>
+      <label class="check-row">
+        <input id="authorized" name="authorized" type="checkbox">
+        <span>I am authorized to scan this target</span>
+      </label>
+      <p id="form-error" class="form-error hidden" role="alert"></p>
+      <div class="form-actions">
+        <button id="submit-scan" type="submit" class="btn-primary">🔦 Start the hunt</button>
+        <button id="run-demo" type="button" class="btn-ghost">👻 Run demo scan</button>
+      </div>
+      <p class="hint">No target handy? The demo is a canned ghost hunt —
+        no network, no subprocess, just the fixture.</p>
+    </form>
+  </section>
+
+  <!-- Live scan -->
+  <section id="section-live-scan" class="panel hidden">
+    <h2><span class="pulse" aria-hidden="true">👻</span> Hunting: <span id="live-target"></span></h2>
+    <p id="live-status" class="status-line">Waking the spirits…</p>
+    <div class="progress" id="progress-bar" aria-label="Scan progress">
+      <div class="seg" data-stage="discovery"><span class="seg-label">Discovery</span></div>
+      <div class="seg" data-stage="probing"><span class="seg-label">Probing</span></div>
+      <div class="seg" data-stage="scanning"><span class="seg-label">Scanning</span></div>
+      <div class="seg" data-stage="done"><span class="seg-label">Done</span></div>
+    </div>
+    <p class="hint"><span id="live-finding-count">0</span> findings spotted so far.</p>
+    <pre id="live-log" class="log" aria-live="polite"></pre>
+    <p id="live-error" class="form-error hidden" role="alert"></p>
+    <div class="form-actions">
+      <button id="live-to-history" type="button" class="btn-ghost">📜 Back to history</button>
+    </div>
+  </section>
+
+  <!-- Findings -->
+  <section id="section-findings" class="panel hidden">
+    <h2>Findings — <span id="findings-target"></span></h2>
+    <p id="findings-meta" class="hint"></p>
+    <div id="severity-filters" class="filters" role="group" aria-label="Filter by severity"></div>
+    <p id="findings-empty" class="empty hidden">🕸️ Nothing lurking here — no findings for this scan.</p>
+    <table id="findings-table" class="findings-table">
+      <thead>
+        <tr>
+          <th>Severity</th>
+          <th>Template</th>
+          <th>Matched URL</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody id="findings-body"></tbody>
+    </table>
+    <div class="form-actions">
+      <button id="findings-to-history" type="button" class="btn-ghost">📜 Back to history</button>
+      <button id="findings-new-scan" type="button" class="btn-primary">🎃 New scan</button>
+    </div>
+  </section>
+
+  <!-- History -->
+  <section id="section-history" class="panel hidden">
+    <h2>Past hunts</h2>
+    <p class="hint">Every scan is kept forever — the dead don't get deleted.</p>
+    <p id="history-empty" class="empty hidden">No hunts yet. The darkness is still untested.</p>
+    <ul id="history-list" class="history-list"></ul>
+  </section>
+</main>
+
+<dialog id="finding-dialog" class="detail-dialog">
+  <form method="dialog" class="dialog-body">
+    <h3 id="dialog-title"></h3>
+    <dl id="dialog-fields"></dl>
+    <button type="submit" class="btn-primary">Close</button>
+  </form>
+</dialog>
+
+<footer class="site-footer">
+  <p>HauntScan — authorized recon only. Never exploit, never scan without permission.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
