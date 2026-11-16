@@ -91,6 +91,19 @@ def test_create_scan_requires_authorization(client, fake_runner):
     assert resp.json()["detail"] == "Authorization required."
 
 
+def test_create_scan_blocked_in_demo_only_mode(client, fake_runner, monkeypatch):
+    monkeypatch.setenv("HAUNTSCAN_DEMO_ONLY", "1")
+    resp = client.post(
+        "/api/scans",
+        json={"target": "example.com", "profile": "quick", "authorized": True},
+    )
+    assert resp.status_code == 403
+    assert resp.json()["detail"] == "Real scans are disabled in demo mode."
+    # The demo endpoint stays open in demo-only mode.
+    resp = client.post("/api/scans/demo")
+    assert resp.status_code == 201
+
+
 def test_create_scan_rejects_private_target(client, fake_runner):
     for target in ("192.168.1.1", "localhost", "10.0.0.5"):
         resp = client.post(

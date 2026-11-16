@@ -1,0 +1,16 @@
+# Render blueprint for the public HauntScan demo (Kiroween submission).
+# Demo-only: HAUNTSCAN_DEMO_ONLY=1 makes POST /api/scans return 403,
+# so only the canned demo replay (/api/scans/demo) works publicly.
+# Free tier: sleeps after inactivity (cold start ~30-60s), fine for a demo.
+services:
+  - type: web
+    name: hauntscan
+    env: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: HAUNTSCAN_DEMO_ONLY
+        value: "1"
+      - key: HAUNTSCAN_DB_PATH
+        value: /tmp/hauntscan.db

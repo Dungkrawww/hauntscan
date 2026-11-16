@@ -52,6 +52,22 @@ def _timeout() -> float:
         return 1800.0
 
 
+def _demo_only() -> bool:
+    """True when the public demo deployment must refuse real scans.
+
+    Env HAUNTSCAN_DEMO_ONLY=1 (also "true"/"yes"/"on") disables
+    POST /api/scans so a public instance can never trigger the
+    NucleiFuzzer toolchain against arbitrary targets. The demo
+    endpoint stays open.
+    """
+    return os.environ.get("HAUNTSCAN_DEMO_ONLY", "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    )
+
+
 async def _get_scan_or_404(scan_id: int) -> dict:
     scan = await asyncio.to_thread(db.get_scan, scan_id)
     if scan is None:
@@ -80,6 +96,11 @@ async def create_scan(
     body: ScanRequest, background: BackgroundTasks
 ) -> dict:
     """Validate, create the scan row, and start the pipeline."""
+    if _demo_only():
+        raise HTTPException(
+            status_code=403,
+            detail="Real scans are disabled in demo mode.",
+        )
     if not body.authorized:
         raise HTTPException(
             status_code=422, detail="Authorization required."
